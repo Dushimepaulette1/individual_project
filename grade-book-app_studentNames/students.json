@@ -1,26 +1,26 @@
 [
     {
         "email": "dushimepaulette@gmail.com",
+        "GPA": 3.0,
         "names": "Dushime paulette",
         "courses_registered": [
             {
-                "name": "Introduction to python",
                 "course_credits": 5,
+                "name": "Introduction to python",
                 "grade": 3.0
             }
-        ],
-        "GPA": 3.0
+        ]
     },
     {
         "email": "kayitesicaroline@gmail.com",
+        "GPA": 0.0,
         "names": "Kayitesi caroline",
         "courses_registered": [
             {
-                "name": "Introduction to databases",
                 "course_credits": 5,
+                "name": "Introduction to databases",
                 "grade": null
             }
-        ],
-        "GPA": 0.0
+        ]
     }
 ]

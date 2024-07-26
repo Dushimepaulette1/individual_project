@@ -1,12 +1,12 @@
 [
     {
-        "name": "Introduction to python",
         "trimester": "Jan 2024",
+        "name": "Introduction to python",
         "course_credits": 5
     },
     {
-        "name": "Introduction to databases",
         "trimester": "may 2024",
+        "name": "Introduction to databases",
         "course_credits": 5
     }
 ]

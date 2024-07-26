@@ -9,11 +9,17 @@ class Student:
         self.GPA = GPA
 
     def calculate_GPA(self):
+        """
+        Calculates the GPA based on the registered courses.
+        If no courses are registered, sets GPA to 0.0.
+        """
         if not self.courses_registered:
             self.GPA = 0.0
         else:
+            # Calculate total credits and total points
             total_credits = sum(course['course_credits'] for course in self.courses_registered if course['grade'] is not None)
             total_points = sum(course['course_credits'] * course['grade'] for course in self.courses_registered if course['grade'] is not None)
+            # Check to avoid division by zero
             self.GPA = total_points / total_credits if total_credits > 0 else 0.0
 
     def register_for_course(self, course):
@@ -29,9 +35,9 @@ class Student:
 
 class Course:
     def __init__(self, name, trimester, course_credits):
-        self.name = name.strip()
-        self.trimester = trimester.strip()
-        self.course_credits = course_credits
+        self.name = name.strip()  # Course name
+        self.trimester = trimester.strip()  # Trimester in which the course is offered
+        self.course_credits = course_credits  # Credit hours for the course
 
     def to_dict(self):
         return {
@@ -42,28 +48,32 @@ class Course:
 
 class GradeBook:
     def __init__(self):
-        self.student_list = []
-        self.course_list = []
-        self.load_data()
+        self.student_list = []  # List to store students
+        self.course_list = []  # List to store courses
+        self.load_data()  # Load data from files
 
     def add_student(self, email, names):
+        # Check if a student with the same email already exists
         if not any(student.email == email for student in self.student_list):
-            self.student_list.append(Student(email, names))
+            self.student_list.append(Student(email, names))  # Add a new student
             print("\nStudent added successfully.")
         else:
             print("\nStudent with this email already exists.")
 
     def add_course(self, name, trimester, course_credits):
+        # Check if a course with the same name already exists
         if not any(course.name == name for course in self.course_list):
-            self.course_list.append(Course(name, trimester, course_credits))
+            self.course_list.append(Course(name, trimester, course_credits))  # Add a new course
             print("\nCourse added successfully.")
         else:
             print("\nCourse with this name already exists.")
 
     def register_student_for_course(self, email, course_name):
         print("\nRegistering student for course...")
+        # Find the student and course by their identifiers
         student = next((s for s in self.student_list if s.email == email), None)
         course = next((c for c in self.course_list if c.name == course_name), None)
+        # Register the student for the course if both exist
         if student and course:
             student.register_for_course({'name': course.name, 'course_credits': course.course_credits, 'grade': None})
             print("\nCourse registered successfully.")
@@ -86,6 +96,7 @@ class GradeBook:
             print("\nError: Either the student or the course does not exist.")
 
     def convert_grade_to_gpa(self, percentage_grade):
+        # Convert percentage grade to GPA based on predefined ranges
         if 90 <= percentage_grade <= 100:
             return 4.0
         elif 80 <= percentage_grade < 90:
@@ -99,34 +110,41 @@ class GradeBook:
 
     def calculate_GPA(self):
         print("\nCalculating GPA for all students...")
+        # Calculate GPA for each student in the list
         for student in self.student_list:
             student.calculate_GPA()
 
     def calculate_ranking(self):
-        self.calculate_GPA()
+        self.calculate_GPA()  # Ensure all GPAs are up-to-date
+        # Sort students by GPA in descending order
         ranked_students = sorted(self.student_list, key=lambda s: s.GPA, reverse=True)
         if ranked_students:
             print("\nStudent Ranking by GPA:")
+            # Print each student's rank and GPA
             for rank, student in enumerate(ranked_students, start=1):
                 print("{}. {}: {}".format(rank, student.email, student.GPA))
         else:
             print("\nNo students available to rank.")
 
     def search_by_grade(self, min_grade, max_grade):
-        self.calculate_GPA()
+        self.calculate_GPA()  # Ensure all GPAs are up-to-date
+        # Filter students based on GPA range
         filtered_students = [s for s in self.student_list if min_grade <= s.GPA <= max_grade]
         if filtered_students:
             print("\nStudents in the GPA range:")
+            # Print each student's email and GPA
             for student in filtered_students:
                 print("{}: {}".format(student.email, student.GPA))
         else:
             print("\nNo students found in the specified GPA range.")
 
     def generate_transcript(self):
-        self.calculate_GPA()
+        self.calculate_GPA()  # Ensure all GPAs are up-to-date
         if self.student_list:
+            # Sort students by GPA in descending order for the transcript
             ranked_students = sorted(self.student_list, key=lambda s: s.GPA, reverse=True)
             print("\nTranscript:")
+            # Print each student's rank, names, and GPA
             for rank, student in enumerate(ranked_students, start=1):
                 print("{}. {}".format(rank, student.names))
                 print("GPA: {}\n".format(student.GPA))
@@ -135,6 +153,7 @@ class GradeBook:
 
     def save_data(self):
         print("\nSaving data to files...")
+        # Save student and course data to JSON files
         with open('students.json', 'w') as f:
             json.dump([student.to_dict() for student in self.student_list], f, indent=4)
         with open('courses.json', 'w') as f:
@@ -142,6 +161,7 @@ class GradeBook:
 
     def load_data(self):
         try:
+            # Load student and course data from JSON files
             with open('students.json', 'r') as f:
                 student_data = json.load(f)
                 self.student_list = [Student(**data) for data in student_data]
@@ -149,6 +169,7 @@ class GradeBook:
                 course_data = json.load(f)
                 self.course_list = [Course(**data) for data in course_data]
         except FileNotFoundError:
+            # If files do not exist, start with empty lists
             pass
 
 def get_valid_input(prompt, input_type=str):
