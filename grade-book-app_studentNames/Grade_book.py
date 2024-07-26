@@ -108,7 +108,7 @@ class GradeBook:
         if ranked_students:
             print("\nStudent Ranking by GPA:")
             for rank, student in enumerate(ranked_students, start=1):
-                print(f"{rank}. {student.email}: {student.GPA}")
+                print("{}. {}: {}".format(rank, student.email, student.GPA))
         else:
             print("\nNo students available to rank.")
 
@@ -118,7 +118,7 @@ class GradeBook:
         if filtered_students:
             print("\nStudents in the GPA range:")
             for student in filtered_students:
-                print(f"{student.email}: {student.GPA}")
+                print("{}: {}".format(student.email, student.GPA))
         else:
             print("\nNo students found in the specified GPA range.")
 
@@ -128,8 +128,8 @@ class GradeBook:
             ranked_students = sorted(self.student_list, key=lambda s: s.GPA, reverse=True)
             print("\nTranscript:")
             for rank, student in enumerate(ranked_students, start=1):
-                print(f"{rank}. {student.names}")
-                print(f"GPA: {student.GPA}\n")
+                print("{}. {}".format(rank, student.names))
+                print("GPA: {}\n".format(student.GPA))
         else:
             print("\nNo students available to generate transcripts.")
 
@@ -161,7 +161,7 @@ def get_valid_input(prompt, input_type=str):
         elif input_type == float and user_input.replace('.', '', 1).isdigit():
             return float(user_input)
         else:
-            print(f"Invalid input. Please enter a valid {input_type.__name__}.")
+            print("Invalid input. Please enter a valid {}.".format(input_type.__name__))
 
 def main():
     grade_book = GradeBook()
@@ -219,7 +219,7 @@ def main():
         elif choice == 8:
             print("\nAvailable Courses:")
             for course in grade_book.course_list:
-                print(f"Course Name: {course.name}")
+                print("Course Name: {}".format(course.name))
         elif choice == 9:
             print("\nSaving data and exiting...")
             grade_book.save_data()
